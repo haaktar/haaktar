@@ -1,0 +1,211 @@
+<html>
+<head>
+<title>BuffSciMethod.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #5c6370; font-style: italic;}
+.s3 { color: #89ca78;}
+.s4 { color: #2bbac5;}
+.s5 { color: #d19a66;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+BuffSciMethod.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">com.github.javafaker.Faker;</span>
+<span class="s0">import </span><span class="s1">io.github.bonigarcia.wdm.WebDriverManager;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.By;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.WebDriver;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.WebElement;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.chrome.ChromeDriver;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.interactions.Actions;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.support.How;</span>
+<span class="s0">import </span><span class="s1">org.openqa.selenium.support.ui.Select;</span>
+<span class="s0">import </span><span class="s1">org.testng.Assert;</span>
+<span class="s0">import </span><span class="s1">org.testng.annotations.BeforeMethod;</span>
+<span class="s0">import </span><span class="s1">org.testng.annotations.Test;</span>
+<span class="s0">import </span><span class="s1">org.w3c.dom.CDATASection;</span>
+
+<span class="s0">import </span><span class="s1">java.util.Set;</span>
+<span class="s0">import </span><span class="s1">java.util.concurrent.TimeUnit;</span>
+
+<span class="s0">public class </span><span class="s1">BuffSciMethod {</span>
+    <span class="s1">WebDriver driver;</span>
+    <span class="s1">Faker faker = </span><span class="s0">new </span><span class="s1">Faker();</span>
+    <span class="s1">Actions actions;</span>
+
+    <span class="s2">// WebElement closePopUp;</span>
+
+    <span class="s1">@BeforeMethod</span>
+    <span class="s0">public void </span><span class="s1">setDriver() {</span>
+        <span class="s1">driver = WebDriverFactory.getDriver(</span><span class="s3">&quot;Chrome&quot;</span><span class="s1">);</span>
+        <span class="s1">driver.get(</span><span class="s3">&quot;https://www.buffsci.org/&quot;</span><span class="s1">);</span>
+        <span class="s1">driver.manage().window().maximize();</span>
+
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">setClosePopUp() {</span>
+        <span class="s1">WebElement closePopUp = closePopUp = driver.findElement(</span><span class="s0">new </span><span class="s1">By.ByXPath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">popupmodal</span><span class="s4">\&quot;</span><span class="s3">]/div/div/div/div[1]/div[2]/button/span&quot;</span><span class="s1">));</span>
+        <span class="s1">closePopUp.click();</span>
+
+    <span class="s1">}</span>
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">setBannerPage() {</span>
+        <span class="s1">WebElement applyNowButton = driver.findElement(By.linkText(</span><span class="s3">&quot;Apply Now !&quot;</span><span class="s1">));</span>
+        <span class="s1">applyNowButton.click();</span>
+
+        <span class="s1">setClosePopUp();</span>
+
+
+        <span class="s1">String mainHandle = driver.getWindowHandle();</span>
+        <span class="s1">Set&lt;String&gt; windowHandles = driver.getWindowHandles();</span>
+        <span class="s0">for </span><span class="s1">(String each : windowHandles) {</span>
+            <span class="s1">driver.switchTo().window(each);</span>
+            <span class="s2">// System.out.println(&quot;Current Title = &quot; + driver.getTitle());</span>
+        <span class="s1">}</span>
+
+        <span class="s1">String expectedEnrolBuffaloWebSite = </span><span class="s3">&quot;Enroll Buffalo Charters | SchoolMint&quot;</span><span class="s1">;</span>
+        <span class="s1">String actualEnrolBuffaloWebSite = driver.getTitle();</span>
+
+        <span class="s1">Assert.assertEquals(actualEnrolBuffaloWebSite, expectedEnrolBuffaloWebSite, </span><span class="s3">&quot;Enroll Buffalo Charters | SchoolMint&quot;</span><span class="s1">);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot;Apply Button Works at the Banner&quot;</span><span class="s1">);</span>
+
+        <span class="s1">driver.switchTo().window(mainHandle);</span>
+        <span class="s2">//System.out.println(driver.getTitle());</span>
+
+
+    <span class="s1">}</span>
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">itHelpDesk() {</span>
+        <span class="s1">setClosePopUp();</span>
+
+        <span class="s1">WebElement itHelpDeskButton = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#topbar &gt; div &gt; div &gt; a:nth-child(1)&quot;</span><span class="s1">));</span>
+        <span class="s1">itHelpDeskButton.click();</span>
+
+        <span class="s1">String mainHandle = driver.getWindowHandle();</span>
+        <span class="s1">Set&lt;String&gt; windowHandles = driver.getWindowHandles();</span>
+        <span class="s0">for </span><span class="s1">(String each : windowHandles) {</span>
+            <span class="s1">driver.switchTo().window(each);</span>
+        <span class="s1">}</span>
+
+
+        <span class="s1">String expectedITHelpDeskURL = </span><span class="s3">&quot;https://myschedule.buffsci.org/helpdesk&quot;</span><span class="s1">;</span>
+        <span class="s1">Assert.assertTrue(expectedITHelpDeskURL.equals(driver.getCurrentUrl()), </span><span class="s3">&quot;https://myschedule.buffsci.org/helpdesk&quot;</span><span class="s1">);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot;IT Help Desk Button Works&quot;</span><span class="s1">);</span>
+
+        <span class="s1">WebElement bestNumberToReachYou = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">input-47</span><span class="s4">\&quot;</span><span class="s3">]&quot;</span><span class="s1">));</span>
+        <span class="s1">bestNumberToReachYou.sendKeys(faker.phoneNumber().cellPhone());</span>
+
+        <span class="s1">WebElement message = driver.findElement(By.id(</span><span class="s3">&quot;input-50&quot;</span><span class="s1">));</span>
+        <span class="s1">message.sendKeys(faker.backToTheFuture().quote());</span>
+
+        <span class="s1">WebElement sendMessage = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">inspire</span><span class="s4">\&quot;</span><span class="s3">]/div/div[1]/div/button/span&quot;</span><span class="s1">));</span>
+        <span class="s1">sendMessage.click();</span>
+
+        <span class="s2">//driver.findElement(By.xpath(&quot;//*[@id=\&quot;inspire\&quot;]/div/nav/div[1]/div[3]/a[4]&quot;)).click();</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">sendUsAMessage() {</span>
+        <span class="s1">setClosePopUp();</span>
+        <span class="s1">Select messageTo = </span><span class="s0">new </span><span class="s1">Select(driver.findElement(By.name(</span><span class="s3">&quot;to&quot;</span><span class="s1">)));</span>
+        <span class="s1">messageTo.selectByIndex(</span><span class="s5">4</span><span class="s1">);</span>
+
+        <span class="s1">WebElement name = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#name&quot;</span><span class="s1">));</span>
+        <span class="s1">name.sendKeys(faker.name().fullName());</span>
+
+        <span class="s1">WebElement yourEmail = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#email&quot;</span><span class="s1">));</span>
+        <span class="s1">yourEmail.sendKeys(faker.internet().emailAddress());</span>
+
+        <span class="s1">WebElement subject = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#subject&quot;</span><span class="s1">));</span>
+        <span class="s1">subject.sendKeys(faker.university().name());</span>
+
+        <span class="s1">WebElement message = driver.findElement(By.name(</span><span class="s3">&quot;message&quot;</span><span class="s1">));</span>
+        <span class="s1">message.sendKeys(faker.gameOfThrones().quote());</span>
+
+        <span class="s1">WebElement submit = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#footer &gt; div.footer-top &gt; div &gt; div &gt; div:nth-child(2) &gt; div &gt; form &gt; div.row &gt; div.col-sm-4 &gt; button&quot;</span><span class="s1">));</span>
+        <span class="s1">submit.click();</span>
+
+
+    <span class="s1">}</span>
+
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">aboutAndAchivementButonsMethod() </span><span class="s0">throws </span><span class="s1">InterruptedException {</span>
+        <span class="s1">setClosePopUp();</span>
+
+        <span class="s1">actions = </span><span class="s0">new </span><span class="s1">Actions(driver);</span>
+
+        <span class="s1">WebElement aboutButton = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">header</span><span class="s4">\&quot;</span><span class="s3">]/div[2]/nav/ul/li[2]/a&quot;</span><span class="s1">));</span>
+        <span class="s1">actions.moveToElement(aboutButton).click(aboutButton).perform();</span>
+
+        <span class="s1">WebElement aboutConfirmationText = driver.findElement(By.cssSelector(</span><span class="s3">&quot;#about &gt; div &gt; div &gt; div.col-lg-7.col-md-6 &gt; div &gt; h2&quot;</span><span class="s1">));</span>
+        <span class="s1">Assert.assertEquals(aboutConfirmationText.getText(), </span><span class="s3">&quot;BuffSci is an Award Winning Tuition-free Charter School.&quot;</span><span class="s1">, </span><span class="s3">&quot;BuffSci is an Award Winning Tuition-free Charter School.&quot;</span><span class="s1">);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot;About Button Works&quot;</span><span class="s1">);</span>
+
+        <span class="s1">driver.manage().timeouts().implicitlyWait(</span><span class="s5">10000</span><span class="s1">, TimeUnit.MILLISECONDS);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot; &quot;</span><span class="s1">);</span>
+
+        <span class="s1">WebElement achivementButton = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">header</span><span class="s4">\&quot;</span><span class="s3">]/div[2]/nav/ul/li[3]/a&quot;</span><span class="s1">));</span>
+        <span class="s1">actions.moveToElement(achivementButton).click(achivementButton).perform();</span>
+
+        <span class="s1">WebElement achivementConfimationText = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">services</span><span class="s4">\&quot;</span><span class="s3">]/div/header/h3&quot;</span><span class="s1">));</span>
+        <span class="s1">Assert.assertEquals(achivementConfimationText.getText(), </span><span class="s3">&quot;Achievements&quot;</span><span class="s1">, </span><span class="s3">&quot;Achievements Text&quot;</span><span class="s1">);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot;Achievements Button Works&quot;</span><span class="s1">);</span>
+
+        <span class="s1">Thread.sleep(</span><span class="s5">2000</span><span class="s1">);</span>
+        <span class="s1">System.out.println(</span><span class="s3">&quot; &quot;</span><span class="s1">);</span>
+<span class="s2">/* 
+ 
+        WebElement schoolButton = driver.findElement(By.xpath(&quot;//*[@id=\&quot;header\&quot;]/div[2]/nav/ul/li[4]/a&quot;)); 
+        actions.moveToElement(schoolButton).perform(); 
+ 
+ */</span>
+
+
+    <span class="s1">}</span>
+<span class="s2">/* 
+    @Test 
+    public void achivementButtonMethod() { 
+ 
+ 
+        actions = new Actions(driver); 
+ 
+        WebElement achivementButton = driver.findElement(By.xpath(&quot;//*[@id=\&quot;header\&quot;]/div[2]/nav/ul/li[3]/a&quot;)); 
+        actions.moveToElement(achivementButton).click(achivementButton).perform(); 
+ 
+        WebElement achivementConfimationText = driver.findElement(By.xpath(&quot;//*[@id=\&quot;services\&quot;]/div/header/h3&quot;)); 
+        Assert.assertEquals(achivementConfimationText.getText(), &quot;Achievements&quot;, &quot;Achievements Text&quot;); 
+        System.out.println(&quot;Achievements Button Works&quot;); 
+    } 
+ 
+ 
+ 
+ */</span>
+
+    <span class="s1">@Test</span>
+    <span class="s0">public void </span><span class="s1">schoolsMenuMethod() {</span>
+        <span class="s1">setClosePopUp();</span>
+
+        <span class="s2">//*[@id=&quot;header&quot;]/div[2]/nav/ul/li[4]/ul/li[1]/a</span>
+        <span class="s1">actions = </span><span class="s0">new </span><span class="s1">Actions(driver);</span>
+
+        <span class="s1">WebElement schoolButton = driver.findElement(By.xpath(</span><span class="s3">&quot;//*[@id=</span><span class="s4">\&quot;</span><span class="s3">header</span><span class="s4">\&quot;</span><span class="s3">]/div[2]/nav/ul/li[4]/a&quot;</span><span class="s1">));</span>
+        <span class="s1">actions.moveToElement(schoolButton).perform();</span>
+
+        <span class="s1">WebElement buffSci1Button = driver.findElement(By.cssSelector(</span><span class="s3">&quot;*[@id=</span><span class="s4">\&quot;</span><span class="s3">header</span><span class="s4">\&quot;</span><span class="s3">]/div[2]/nav/ul/li[4]/ul/li[1]/a&quot;</span><span class="s1">));</span>
+        <span class="s1">actions.moveToElement(buffSci1Button).click(buffSci1Button).perform();</span>
+
+    <span class="s1">}</span>
+
+
+<span class="s1">}</span></pre>
+</body>
+</html>
