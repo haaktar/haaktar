@@ -36,7 +36,6 @@ public class BuffSciMethod {
         closePopUp.click();
 
     }
-
     @AfterMethod
     public void quit() {
         try {
