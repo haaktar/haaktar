@@ -1,18 +1,17 @@
 import com.github.javafaker.Faker;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.w3c.dom.CDATASection;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -23,9 +22,14 @@ public class BuffSciMethod {
 
 
     @BeforeMethod
-    public void setDriver() {
+    public void setDriver() throws IOException {
+        Properties properties = new Properties();
+        FileInputStream file = new FileInputStream("configuration.properties");
+        properties.load(file);
+        file.close();
+
         driver = WebDriverFactory.getDriver("Chrome");
-        driver.get("https://www.buffsci.org/");
+        driver.get(properties.getProperty("website"));
         driver.manage().window().maximize();
 
 
@@ -36,6 +40,7 @@ public class BuffSciMethod {
         closePopUp.click();
 
     }
+
     @AfterMethod
     public void quit() {
         try {
